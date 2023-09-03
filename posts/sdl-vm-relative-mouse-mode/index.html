@@ -1,0 +1,77 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet type=text/css href=/css/style.css><title>Roverdi's Website | SDL2, VMware, Linux and Relative Mouse Mode</title></head><body><div class=container><div class=header><div class=site-title><a class="menu-link h3 title" href=/>RODRIGO VERDIANI</a></div><hr class=divider><div class=menu><ul><li class="flex-item h6"><a class="menu-link title" href=/about>ABOUT</a></li><li class="flex-item h6"><a class="menu-link title" href=/contact>CONTACT</a></li><li class="flex-item h6"><a class="menu-link title" href=/posts/index.xml>RSS</a></li></ul></div></div><div class=line-break></div><div id=content><article class=article-body><div class=article-title><div class="h6 title">12/07/2023</div><div><div class="h5 title" style=float:left>SDL2, VMware, Linux and Relative Mouse Mode</div><div class=back-link-div style=float:right;text-align:right><script>document.write('<a class="back-link" href="'+document.referrer+'">Go Back</a>')</script></div></div></div><br><hr class=divider><div class=article-content><p>So, one of my pet projects is a game engine based on a 3D Software Renderer (that I will post about some other day). One night, while I was working on it implementing an FPS camera, I started getting strange results when moving the mouse.</p><p>My development setup for this kind of stuff consisted on a VM running Fedora XFCE Spin, where I would code using CLion, build and execute the program. All was working fine until I got to the mouse related code.</p><p>For the approach I was taking, we needed to set the mouse to the Relative Mouse mode, by using the SDL_SetRelativeMouseMode() function. According to the <a href=https://wiki.libsdl.org/SDL2/SDL_SetRelativeMouseMode>SDL Wiki</a>, it works like this:</p><blockquote><p>While the mouse is in relative mode, the cursor is hidden, the mouse position is constrained to the window, and <strong>SDL will report continuous relative mouse motion even if the mouse is at the edge of the window</strong>.</p></blockquote><p>When used together with the SDL_GetRelativeMouseState() function, I should have the mouse deltas since the last time the input was read (once per frame). With those values, I could rotate my camera accordingly.</p><p>Ok, so it seems that this is exactly what I needed: the mouse should not exit the window and it will continue to report motion even when at the edge of it. Let&rsquo;s see how I implemented that on the code.</p><pre tabindex=0><code>void init_display()
+{
+    // Window creation code
+    // ...
+
+    if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)
+    {
+        // Log the error and exit the program
+        return;
+    }
+
+    // ...
+}
+
+void process_input()
+{
+    SDL_PumpEvents();
+    
+    // Keyboard state reading code
+    // ...
+    
+    int32_t x_offset, y_offset;
+    SDL_GetRelativeMouseState(&amp;x_offset, &amp;y_offset); // Ignoring the button state for now
+    // Do stuff with the relative mouse motion values set by the function
+    // ...
+}
+</code></pre><p>But then I got into troubles. When running this code for the first time, with a little touch on the mouse, the camera went crazy. It seemed to me that the sensitivity of the mouse motion was too high; I then proceeded to multiply those two variables by a scaling factor in an attempt to correct that - it didn&rsquo;t solve the issue, but made the movement slower, which allowed me to discover another problem: when the mouse cursor seemed to reach the border of the window, the movement stopped completely. Well, there was something clearly wrong.</p><p>I was not sure if the camera rotation code was correct, so I hacked a simple test using keyboard input and it worked flawlessly. Ok, then I was sure that the values I was getting from the mouse state were wrong somehow. To verify that, I put a simple debug printf on the process_input() function:</p><pre tabindex=0><code>void process_input()
+{
+    // ...
+    
+    int32_t x_offset, y_offset;
+    SDL_GetRelativeMouseState(&amp;x_offset, &amp;y_offset); // Ignoring the button state for now
+    printf(&#34;Mouse motion: X: %d Y: %d\n&#34;, x_offset, y_offset);
+    
+    // ...
+}
+</code></pre><p>Which returned me values such as:</p><pre tabindex=0><code>Mouse motion: X: -34 Y: 142
+Mouse motion: X: -34 Y: 214
+Mouse motion: X: 0 Y: 0
+Mouse motion: X: 0 Y: 142
+Mouse motion: X: -34 Y: 214
+Mouse motion: X: 0 Y: 71
+Mouse motion: X: 0 Y: 0
+Mouse motion: X: -34 Y: 71
+Mouse motion: X: 0 Y: 0
+Mouse motion: X: 0 Y: 72
+Mouse motion: X: 0 Y: 0
+Mouse motion: X: 0 Y: 0
+Mouse motion: X: 0 Y: 0
+Mouse motion: X: 0 Y: 0
+</code></pre><p>Given that the camera_rotate() function that I was using expect values in degrees, those values were really greater than what it should be for it to work properly. Moreover, those <em>X:0 Y:0</em> lines where printed when the mouse was on the edge of the screen and I was still moving it.</p><p>With a quick search on Google, I managed to <a href=https://github.com/libsdl-org/SDL/issues/1116>find an issue on the SDL GitHub</a> that seemed related to the problems I was having. There was an statement from Sam Lantinga (the SDL creator) on it, which said:</p><blockquote><p>You also can&rsquo;t reliably test relative mode in a VM, which is one of the reasons I haven&rsquo;t gotten to it yet. :)</p></blockquote><p>Hm, so could the problem be the virtual machine? I didn&rsquo;t have any Linux box on hand to try the code, so I ended up porting the source and built it on the Windows host. After solving some issues related to the porting process, I ran it. And it worked perfectly, no issues whatsoever. Here is the output of that printf() debug line:</p><pre tabindex=0><code>Mouse motion: X: -2 Y: 1
+Mouse motion: X: -3 Y: 2
+Mouse motion: X: -3 Y: 1
+Mouse motion: X: -2 Y: 1
+Mouse motion: X: -3 Y: 2
+Mouse motion: X: -3 Y: 2
+Mouse motion: X: -2 Y: 2
+Mouse motion: X: -2 Y: 2
+Mouse motion: X: -2 Y: 2
+Mouse motion: X: -2 Y: 4
+Mouse motion: X: -2 Y: 4
+Mouse motion: X: -1 Y: 2
+</code></pre><p>Notice how smaller the values are. It works just fine with the camera_rotate() function that I made, and the only times I got the <em>X:0 Y:0</em> results were when the mouse was completely still.</p><p>Some days later, having some time away from work, I built a Linux box with some pretty old parts I had laying around, and installed the same version of Fedora and the tools I was using, and built the source code. Just like the Windows machine, absolutely no errors; this made me pretty confident that the problem was indeed with the virtual machine.</p><p>On that GitHub issue that I talked about, there was a workaround that seemed to work for someone, but I had no luck on getting it to work. <a href=https://stackoverflow.com/questions/25576438/sdl-getrelativemousestate-strange-behaviour>It consisted of setting an SDL Hint</a>, like this:</p><pre tabindex=0><code>void init_display()
+{
+    // Window creation code
+    // ...
+    
+    SDL_SetHintWithPriority(SDL_HINT_MOUSE_RELATIVE_MODE_WARP, &#34;1&#34;, SDL_HINT_OVERRIDE); // the workaround
+    if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)
+    {
+        // Log the error and exit the program
+        return;
+    }
+
+    // ...
+}
+</code></pre><p>When I tried it, it didn&rsquo;t change the behavior of the program at all. For the time, I just gave up on getting this to work on the VM, and moved the development to the Windows host. Maybe someday I will try to fix this again, but, given that it works on real hardware running Linux, I&rsquo;m not that concerned.</p><p>If anyone has any suggestions to this problem, I would love to know.</p></div></article></div><div class=line-break></div><div class=footer><hr class=divider><div class=social><ul><li class=flex-item><a href=https://www.instagram.com/roverdiani/ target=_blank rel=noopener title=Instagram><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg></a></li><li class=flex-item><a href=https://twitter.com/rocverde target=_blank rel=noopener title=Twitter><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9.0 01-3.14 1.53 4.48 4.48.0 00-7.86 3v1A10.66 10.66.0 013 4s-4 9 5 13a11.64 11.64.0 01-7 2c9 5 20 0 20-11.5a4.5 4.5.0 00-.08-.83A7.72 7.72.0 0023 3z"/></svg></a></li><li class=flex-item><a href=https://www.linkedin.com/in/rodrigo-verdiani-451970203/ target=_blank rel=noopener title=Linkedin><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a></li><li class=flex-item><a href=https://github.com/roverdiani target=_blank rel=noopener title=Github><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg></a></li></ul></div></div></div></body></html>

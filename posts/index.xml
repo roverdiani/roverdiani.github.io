@@ -1,5 +1,44 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Roverdi's Website</title><link>http://roverdi.dev/posts/</link><description>Recent content in Posts on Roverdi's Website</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 12 Jul 2023 15:00:00 -0300</lastBuildDate><atom:link href="http://roverdi.dev/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>SDL2, VMware, Linux and Relative Mouse Mode</title><link>http://roverdi.dev/posts/sdl-vm-relative-mouse-mode/</link><pubDate>Wed, 12 Jul 2023 15:00:00 -0300</pubDate><guid>http://roverdi.dev/posts/sdl-vm-relative-mouse-mode/</guid><description>So, one of my pet projects is a game engine based on a 3D Software Renderer (that I will post about some other day). One night, while I was working on it implementing an FPS camera, I started getting strange results when moving the mouse.
-My development setup for this kind of stuff consisted on a VM running Fedora XFCE Spin, where I would code using CLion, build and execute the program.</description></item><item><title>Hello World!</title><link>http://roverdi.dev/posts/hello-world/</link><pubDate>Wed, 12 Jul 2023 13:00:00 -0300</pubDate><guid>http://roverdi.dev/posts/hello-world/</guid><description>Hey there! Welcome to my website!
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Roverdi&#39;s Website</title>
+    <link>http://roverdi.dev/posts/</link>
+    <description>Recent content in Posts on Roverdi&#39;s Website</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 14 Oct 2023 20:00:00 -0300</lastBuildDate><atom:link href="http://roverdi.dev/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Windows XP on a Dell Optiplex 380</title>
+      <link>http://roverdi.dev/posts/optiplex-380-win-xp/</link>
+      <pubDate>Sat, 14 Oct 2023 20:00:00 -0300</pubDate>
+      
+      <guid>http://roverdi.dev/posts/optiplex-380-win-xp/</guid>
+      <description>What&amp;rsquo;s the best way to enjoy some free time off work? By spending hours working on a dumb old computer!
+So, I was in need for an Windows XP era machine to play with some old games source code, and got my hands on this little Dell machine: the desktop version of the Dell Optiplex 380.
+Mine is the model on the middle - sorry about the low quality, this is the biggest image that I found.</description>
+    </item>
+    
+    <item>
+      <title>SDL2, VMware, Linux and Relative Mouse Mode</title>
+      <link>http://roverdi.dev/posts/sdl-vm-relative-mouse-mode/</link>
+      <pubDate>Wed, 12 Jul 2023 15:00:00 -0300</pubDate>
+      
+      <guid>http://roverdi.dev/posts/sdl-vm-relative-mouse-mode/</guid>
+      <description>So, one of my pet projects is a game engine based on a 3D Software Renderer (that I will post about some other day). One night, while I was working on it implementing an FPS camera, I started getting strange results when moving the mouse.
+My development setup for this kind of stuff consisted on a VM running Fedora XFCE Spin, where I would code using CLion, build and execute the program.</description>
+    </item>
+    
+    <item>
+      <title>Hello World!</title>
+      <link>http://roverdi.dev/posts/hello-world/</link>
+      <pubDate>Wed, 12 Jul 2023 13:00:00 -0300</pubDate>
+      
+      <guid>http://roverdi.dev/posts/hello-world/</guid>
+      <description>Hey there! Welcome to my website!
 I know that this &amp;ldquo;Hello, World!&amp;rdquo; thing is really cliche, but I couldn&amp;rsquo;t miss the opportunity :P
 Anyway, seriously now! My name is Rodrigo Verdiani (aka Roverdi), and I&amp;rsquo;m a Brazilian developer. You can find more about me on the about section.
-On this website I hope to post some stuff that I&amp;rsquo;m currently messing with, but for the moment I&amp;rsquo;m still working on structuring this blog.</description></item></channel></rss>
+On this website I hope to post some stuff that I&amp;rsquo;m currently messing with, but for the moment I&amp;rsquo;m still working on structuring this blog.</description>
+    </item>
+    
+  </channel>
+</rss>

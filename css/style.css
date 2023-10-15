@@ -92,6 +92,23 @@ blockquote p {
     margin: 0;
 }
 
+figure img {
+	width: 100%;
+	border: dashed 1px #000;
+}
+
+figure figcaption {
+	padding: none;
+	margin: none;
+	text-align: center;
+}
+
+figure figcaption h4 {
+	margin-top: 2px;
+	font-style: italic;
+	font-weight: normal;
+}
+
 .header, .footer {
     width: 300px;
 }

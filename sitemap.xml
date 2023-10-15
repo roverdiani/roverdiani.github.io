@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>http://roverdi.dev/posts/</loc>
+    <lastmod>2023-10-14T20:00:00-03:00</lastmod>
+  </url><url>
+    <loc>http://roverdi.dev/</loc>
+    <lastmod>2023-10-14T20:00:00-03:00</lastmod>
+  </url><url>
+    <loc>http://roverdi.dev/posts/optiplex-380-win-xp/</loc>
+    <lastmod>2023-10-14T20:00:00-03:00</lastmod>
+  </url><url>
+    <loc>http://roverdi.dev/posts/sdl-vm-relative-mouse-mode/</loc>
+    <lastmod>2023-07-12T15:00:00-03:00</lastmod>
+  </url><url>
+    <loc>http://roverdi.dev/posts/hello-world/</loc>
+    <lastmod>2023-07-12T13:00:00-03:00</lastmod>
+  </url><url>
+    <loc>http://roverdi.dev/about/</loc>
+  </url><url>
+    <loc>http://roverdi.dev/categories/</loc>
+  </url><url>
+    <loc>http://roverdi.dev/contact/</loc>
+  </url><url>
+    <loc>http://roverdi.dev/tags/</loc>
+  </url>
+</urlset>

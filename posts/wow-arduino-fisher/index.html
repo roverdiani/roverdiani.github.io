@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en-US"><head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+
+    
+    
+    <title>Roverdi&#39;s Website | WoW Arduino Fisher</title>
+</head><body>
+        <div class="container"><div class="header">
+    <div class="site-title">
+        <a class="menu-link h3 title" href="/">RODRIGO VERDIANI</a>
+    </div>
+    <hr class="divider">
+    <div class="menu">
+        <ul>
+            
+            <li class="flex-item h6">
+                <a class="menu-link title" href="/about">
+                
+                ABOUT
+                </a>
+            </li>
+            
+            <li class="flex-item h6">
+                <a class="menu-link title" href="/contact">
+                
+                CONTACT
+                </a>
+            </li>
+            
+            <li class="flex-item h6">
+                <a class="menu-link title" href="/posts/index.xml">
+                
+                RSS
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div><div class="line-break"></div>
+
+            <div id="content">
+<article class="article-body">
+    <div class="article-title"><div class="h6 title" style="" >25/10/2023</div><div>
+            <div class="h5 title" style="float: left;">WoW Arduino Fisher</div>
+            <div class="back-link-div" style="float: right; text-align: right;">
+                <script>
+                    document.write('<a class="back-link" href="' + document.referrer + '">Go Back</a>');
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <hr class="divider">
+
+    <div class="article-content">
+        <p><em>So&hellip; I made a thing.</em></p>
+<figure><img src="/img/wowfisher.png"/>
+</figure>
+
+<p><strong>DISCLAIMER:</strong></p>
+<p><em><strong>This project is intended only as a learning exercise. Don&rsquo;t use it to take advantage in the game, and don&rsquo;t try it on Blizz&rsquo;s live servers. Automation of gameplay is against the rules, and you could lose your account. Try it on a private server if you wish to see it working.</strong></em></p>
+<p>Having said that, let me start by telling you the motivation behind this idea. At some point in my life as a WoW player (almost 12 years now), I began to collect achievements.</p>
+<p>For those that doesn&rsquo;t know WoW, your characters can learn up to five professions - 2 main and 3 secondary. Fishing is one of the secondary professions (Cooking and Archaeology being the other two available). <em>By fishing you can collect some reagents, consumables, crafting materials, collectibles and more; you can also get some achievements.</em></p>
+<p>One of these achievements, <a href="https://www.wowhead.com/achievement=1836/old-crafty">Old Crafty</a>, asks you to catch a rare fish in Orgrimmar (one of the main cities in the game). Easy, right?</p>
+<p>Well, I spent quite some time trying to fish it up. More precisely, in the end it took me <em>almost 15,000 casts</em> to catch it. Let me say that it was extremely boring, as each cast can take up to about 22 seconds.</p>
+<p>Okay, as a little exercise, there must be a way to automatize this while reducing the chances to being caught. As a friend recently taught me, <strong>you can officially fish in WoW using two keybinds</strong> nowadays: one for casting the line and another for grabbing the fish.</p>
+<p>Some days ago I was organizing some stuff around the house and found a box full of Arduinos, one of them being an <a href="https://docs.arduino.cc/hardware/leonardo">Arduino Leonardo</a>. But what makes it useful for this project? Well, it can appear to a connected computer as a mouse and keyboard, so it can send keystrokes to the computer telling the game what to do.</p>
+<p>That leaves us with one little detail: <em>how do we know if the fish is hooked so the catch keystroke can be sent?</em> I didn&rsquo;t want to use software for reading the screen or memory, as this could easily be caught by the anti-cheat system in the game. So, without looking at the screen, which other ways can the game tell us that we should catch the fish? By the sound the game makes when fish bite the bait.</p>
+<p>For this project, I didn&rsquo;t put a lot of effort on make it rock solid, so there is some room for improvement. If I would make a better version of this, <strong>I would use an amplifier module</strong> (an LM386 audio amplifier or <a href="https://www.adafruit.com/product/1552">something like this</a>), to amplify the signal that comes from the sound card before it enters the Arduino.</p>
+<p>As I didn&rsquo;t use an amplifier, the circuit is extremely simple. <strong>Just plug the output of the sound card on the Arduino</strong>. Tie the ground signal of the sound card and the ground signal of the Arduino together, and feed the signal to one of the analog inputs (I chose A1). The circuit is as follow:</p>
+<figure><img src="/img/arduinofisher.png"/><figcaption>
+            <h4>The sound card output is represented as the speakerbox.</h4>
+        </figcaption>
+</figure>
+
+<p>Here is the source code for the basic version of the software. I will leave the <a href="https://github.com/roverdiani/wowfisher">full source code on my GitHub</a>, along some tricks that I implemented to make the program behavior a little more random.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;Keyboard.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define FISHING_TIMEOUT 25000
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define SOUND_DETECT_THRESHOLD 50
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> FISHING_KEY <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;1&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> CATCH_KEY <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;f&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Variable to keep track if we are fishing or not
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">bool</span> isFishing <span style="color:#f92672">=</span> false;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Throw the fishing line by issuing the fishing key keystroke
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">fish</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    Serial.println(<span style="color:#e6db74">&#34;Fishing.&#34;</span>);
+</span></span><span style="display:flex;"><span>    Keyboard.write(FISHING_KEY);
+</span></span><span style="display:flex;"><span>    isFishing <span style="color:#f92672">=</span> true;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Catch the fish by issuing the catch key keystroke
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">catch_fish</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Ignore this if we are not currently fishing.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// This exists so that it doesnt issue multiple keystrokes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// when already catching a fish.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>isFishing)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        Serial.println(<span style="color:#e6db74">&#34;CATCH: called when not fishing. Ignoring.&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Wait sometime before catching the fish.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Serial.print(<span style="color:#e6db74">&#34;CATCH: delay 1500ms before catching.&#34;</span>);
+</span></span><span style="display:flex;"><span>    delay(<span style="color:#ae81ff">1500</span>);
+</span></span><span style="display:flex;"><span>    Keyboard.write(CATCH_KEY);
+</span></span><span style="display:flex;"><span>    isFishing <span style="color:#f92672">=</span> false;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setup</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    delay(<span style="color:#ae81ff">1000</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Init the keyboard and serial libraries.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Keyboard.begin();
+</span></span><span style="display:flex;"><span>    Serial.begin(<span style="color:#ae81ff">9600</span>);
+</span></span><span style="display:flex;"><span>    Serial.println(<span style="color:#e6db74">&#34;Fisher v0.1&#34;</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    delay(<span style="color:#ae81ff">1000</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">loop</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> soundDetect;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    fish();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> fishing_start_time <span style="color:#f92672">=</span> millis();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Keep listening for the sound the game makes when a fish is hooked.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// If enough time has elapsed, maybe we missed some fish, so it starts again.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (millis() <span style="color:#f92672">&gt;</span> (fishing_start_time <span style="color:#f92672">+</span> FISHING_TIMEOUT))
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            Serial.println(<span style="color:#e6db74">&#34;LOOP: failed to detect catch sound. Starting again.&#34;</span>);
+</span></span><span style="display:flex;"><span>            fish();
+</span></span><span style="display:flex;"><span>            fishing_start_time <span style="color:#f92672">=</span> millis();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        soundDetect <span style="color:#f92672">=</span> analogRead(A1);
+</span></span><span style="display:flex;"><span>        delay(<span style="color:#ae81ff">100</span>);
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">while</span> (soundDetect <span style="color:#f92672">&lt;</span> SOUND_DETECT_THRESHOLD);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// We caught some fish! Yay!
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Serial.println(<span style="color:#e6db74">&#34;Fish detected.&#34;</span>);
+</span></span><span style="display:flex;"><span>    catch_fish();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Wait a little before throwing the line again.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Serial.print(<span style="color:#e6db74">&#34;LOOP: wait 2000ms before fishing again.&#34;</span>);
+</span></span><span style="display:flex;"><span>    delay(<span style="color:#ae81ff">2000</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Keep in mind that <strong>this is not a perfect solution</strong>. As it relies on sound for taking actions, you have to <strong>fish in places that are quiet</strong>, as nearby noises can make it interpret as if a fish was caught.</p>
+<p>You also need to <em>keep the WoW window focused</em> for the keystrokes to work. You may need to try different sound levels and adjust the code to compensate for variations of sound cards.</p>
+<p>And remember: <strong>I do not take responsibility for the usage of this project.</strong></p>
+<p>Now, let&rsquo;s try to get the <a href="https://www.wowhead.com/achievement=1837/old-ironjaw">Old Ironjaw</a> (without cheating!) :)</p>
+<figure><img src="/img/oldironjaw.png"/>
+</figure>
+
+
+    </div>
+
+</article>
+
+            </div>
+
+            <div class="line-break"></div><div class="footer">
+    <hr class="divider">
+    <div class="social">
+        <ul>
+            <li class="flex-item">
+                <a href="https://www.instagram.com/roverdiani/" target="_blank" rel="noopener" title="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line></svg></a>
+            </li>
+            <li class="flex-item">
+                <a href="https://twitter.com/rocverde" target="_blank" rel="noopener" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9.0 01-3.14 1.53 4.48 4.48.0 00-7.86 3v1A10.66 10.66.0 013 4s-4 9 5 13a11.64 11.64.0 01-7 2c9 5 20 0 20-11.5a4.5 4.5.0 00-.08-.83A7.72 7.72.0 0023 3z"></path></svg></a>
+            </li>
+            <li class="flex-item">
+                <a href="https://www.linkedin.com/in/rodrigo-verdiani-451970203/" target="_blank" rel="noopener" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+            </li>
+            <li class="flex-item">
+                <a href="https://github.com/roverdiani" target="_blank" rel="noopener" title="Github"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"></path></svg></a>
+            </li>
+        </ul>
+    </div>
+</div></div>
+    </body>
+</html>

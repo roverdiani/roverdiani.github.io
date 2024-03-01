@@ -19,7 +19,7 @@
 
 * {
     font-family: DejaVuSansMono, monospace;
-    font-size: 16px;
+    font-size: 15px;
     box-sizing: border-box;
     color: #000000;
 }
@@ -73,7 +73,7 @@ html {
 code {
     display: block;
     border: dashed 1px #000;
-    background-color: #DCFDDA;
+    background-color: #f7f9fe ;
     padding: 1rem;
     text-wrap: none;
     overflow: auto;

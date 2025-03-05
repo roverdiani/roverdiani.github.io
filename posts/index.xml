@@ -1,56 +1,18 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Posts on Roverdi&#39;s Website</title>
-    <link>https://roverdiani.github.io/posts/</link>
-    <description>Recent content in Posts on Roverdi&#39;s Website</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Wed, 25 Oct 2023 10:00:00 -0300</lastBuildDate><atom:link href="https://roverdiani.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>WoW Arduino Fisher</title>
-      <link>https://roverdiani.github.io/posts/wow-arduino-fisher/</link>
-      <pubDate>Wed, 25 Oct 2023 10:00:00 -0300</pubDate>
-      
-      <guid>https://roverdiani.github.io/posts/wow-arduino-fisher/</guid>
-      <description>So&amp;hellip; I made a thing.
-DISCLAIMER:
-This project is intended only as a learning exercise. Don&amp;rsquo;t use it to take advantage in the game, and don&amp;rsquo;t try it on Blizz&amp;rsquo;s live servers. Automation of gameplay is against the rules, and you could lose your account. Try it on a private server if you wish to see it working.
-Having said that, let me start by telling you the motivation behind this idea.</description>
-    </item>
-    
-    <item>
-      <title>Windows XP on a Dell Optiplex 380</title>
-      <link>https://roverdiani.github.io/posts/optiplex-380-win-xp/</link>
-      <pubDate>Sat, 14 Oct 2023 20:00:00 -0300</pubDate>
-      
-      <guid>https://roverdiani.github.io/posts/optiplex-380-win-xp/</guid>
-      <description>What&amp;rsquo;s the best way to enjoy some free time off work? By spending hours working on a dumb old computer!
-So, I was in need for an Windows XP era machine to play with some old games source code, and got my hands on this little Dell machine: the desktop version of the Dell Optiplex 380.
-Mine is the model on the middle - sorry about the low quality, this is the biggest image that I found.</description>
-    </item>
-    
-    <item>
-      <title>SDL2, VMware, Linux and Relative Mouse Mode</title>
-      <link>https://roverdiani.github.io/posts/sdl-vm-relative-mouse-mode/</link>
-      <pubDate>Wed, 12 Jul 2023 15:00:00 -0300</pubDate>
-      
-      <guid>https://roverdiani.github.io/posts/sdl-vm-relative-mouse-mode/</guid>
-      <description>So, one of my pet projects is a game engine based on a 3D Software Renderer (that I will post about some other day). One night, while I was working on it implementing an FPS camera, I started getting strange results when moving the mouse.
-My development setup for this kind of stuff consisted on a VM running Fedora XFCE Spin, where I would code using CLion, build and execute the program.</description>
-    </item>
-    
-    <item>
-      <title>Hello World!</title>
-      <link>https://roverdiani.github.io/posts/hello-world/</link>
-      <pubDate>Wed, 12 Jul 2023 13:00:00 -0300</pubDate>
-      
-      <guid>https://roverdiani.github.io/posts/hello-world/</guid>
-      <description>Hey there! Welcome to my website!
-I know that this &amp;ldquo;Hello, World!&amp;rdquo; thing is really cliche, but I couldn&amp;rsquo;t miss the opportunity :P
-Anyway, seriously now! My name is Rodrigo Verdiani (aka Roverdi), and I&amp;rsquo;m a Brazilian developer. You can find more about me on the about section.
-On this website I hope to post some stuff that I&amp;rsquo;m currently messing with, but for the moment I&amp;rsquo;m still working on structuring this blog.</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Roverdi's Website</title><link>https://roverdiani.github.io/posts/</link><description>Recent content in Posts on Roverdi's Website</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Wed, 25 Oct 2023 10:00:00 -0300</lastBuildDate><atom:link href="https://roverdiani.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>WoW Arduino Fisher</title><link>https://roverdiani.github.io/posts/wow-arduino-fisher/</link><pubDate>Wed, 25 Oct 2023 10:00:00 -0300</pubDate><guid>https://roverdiani.github.io/posts/wow-arduino-fisher/</guid><description>&lt;p>&lt;em>So&amp;hellip; I made a thing.&lt;/em>&lt;/p>
+&lt;figure>&lt;img src="https://roverdiani.github.io/img/wowfisher.png">
+&lt;/figure>
+
+&lt;p>&lt;strong>DISCLAIMER:&lt;/strong>&lt;/p>
+&lt;p>&lt;em>&lt;strong>This project is intended only as a learning exercise. Don&amp;rsquo;t use it to take advantage in the game, and don&amp;rsquo;t try it on Blizz&amp;rsquo;s live servers. Automation of gameplay is against the rules, and you could lose your account. Try it on a private server if you wish to see it working.&lt;/strong>&lt;/em>&lt;/p>
+&lt;p>Having said that, let me start by telling you the motivation behind this idea. At some point in my life as a WoW player (almost 12 years now), I began to collect achievements.&lt;/p></description></item><item><title>Windows XP on a Dell Optiplex 380</title><link>https://roverdiani.github.io/posts/optiplex-380-win-xp/</link><pubDate>Sat, 14 Oct 2023 20:00:00 -0300</pubDate><guid>https://roverdiani.github.io/posts/optiplex-380-win-xp/</guid><description>&lt;p>What&amp;rsquo;s the best way to enjoy some free time off work? By spending hours working on a dumb old computer!&lt;/p>
+&lt;p>So, I was in need for an Windows XP era machine to play with some old games source code, and got my hands on this little Dell machine: the desktop version of the &lt;strong>Dell Optiplex 380&lt;/strong>.&lt;/p>
+&lt;figure>&lt;img src="https://roverdiani.github.io/img/Dell-OptiPlex-380.webp">&lt;figcaption>
+ &lt;h4>Mine is the model on the middle - sorry about the low quality, this is the biggest image that I found.&lt;/h4>
+ &lt;/figcaption>
+&lt;/figure>
+
+&lt;p>Before I rant about the problems that I had, let me say that I &lt;em>really&lt;/em> like this form factor: it is relatively thin, can be used on the horizontal and has a decent spec (for the purpose I will be using it for, anyway). My machine has an &lt;em>&lt;strong>Intel Core 2 Duo E7500 (2.93 GHz)&lt;/strong>&lt;/em>, &lt;strong>4 GB of &lt;em>RAM&lt;/em>&lt;/strong> and I put a &lt;strong>120 GB &lt;em>SSD&lt;/em>&lt;/strong> on it; it has an &lt;em>DVD drive&lt;/em> and &lt;em>no floppy disk drive&lt;/em> (more on that later).&lt;/p></description></item><item><title>SDL2, VMware, Linux and Relative Mouse Mode</title><link>https://roverdiani.github.io/posts/sdl-vm-relative-mouse-mode/</link><pubDate>Wed, 12 Jul 2023 15:00:00 -0300</pubDate><guid>https://roverdiani.github.io/posts/sdl-vm-relative-mouse-mode/</guid><description>&lt;p>So, one of my pet projects is a game engine based on a 3D Software Renderer (that I will post about some other day). One night, while I was working on it implementing an FPS camera, I started getting strange results when moving the mouse.&lt;/p>
+&lt;p>My development setup for this kind of stuff consisted on a VM running Fedora XFCE Spin, where I would code using CLion, build and execute the program. All was working fine until I got to the mouse related code.&lt;/p></description></item><item><title>Hello World!</title><link>https://roverdiani.github.io/posts/hello-world/</link><pubDate>Wed, 12 Jul 2023 13:00:00 -0300</pubDate><guid>https://roverdiani.github.io/posts/hello-world/</guid><description>&lt;p>Hey there! Welcome to my website!&lt;/p>
+&lt;p>I know that this &amp;ldquo;Hello, World!&amp;rdquo; thing is really cliche, but I couldn&amp;rsquo;t miss the opportunity :P&lt;/p>
+&lt;p>Anyway, seriously now! My name is Rodrigo Verdiani (aka Roverdi), and I&amp;rsquo;m a Brazilian developer. You can find more about me on the &lt;a href="https://roverdiani.github.io/about">about section&lt;/a>.&lt;/p>
+&lt;p>On this website I hope to post some stuff that I&amp;rsquo;m currently messing with, but for the moment I&amp;rsquo;m still working on structuring this blog. Besides that, being pretty new to this kind of thing, I&amp;rsquo;m still very shy :)&lt;/p></description></item></channel></rss>

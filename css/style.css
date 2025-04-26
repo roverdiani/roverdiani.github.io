@@ -1,42 +1,69 @@
-@font-face {
-    font-family: 'CentimaMonoBold';
-    src: url("/font/CentimaMonoBold.ttf");
-    font-display: auto;
-}
-
-@font-face {
-    font-family: 'DejaVuSansMono';
-    src: url("/font/DejaVuSansMono.ttf");
-    font-display: auto;
-}
-
-@font-face {
-    font-family: 'DejaVuSansMono';
-    src: url("/font/DejaVuSansMono-Bold.ttf");
-    font-weight: bold;
-    font-display: auto;
-}
-
 * {
-    font-family: DejaVuSansMono, monospace;
-    font-size: 15px;
     box-sizing: border-box;
-    color: #000000;
-}
-
-a:link {
-    color: #000000;
-}
-
-body {
-    background: #FAF0D7;
-    display: block;
-    margin: 0;
-    line-height: 1.5;
 }
 
 html {
     display: block;
+}
+
+body {
+    display: block;
+    margin: 0;
+    line-height: 1.5;
+    background: #EBEDDF;
+    color: #072224
+}
+
+body.dark-mode {
+    background: #072224;
+    color: #EBEDDF;
+
+    .site-title {
+        color: #C3E472;
+        text-align: center;
+    }
+
+    .social ul a {
+        color: #C3E472;
+    }
+
+    .social ul a:hover {
+        color: #6CA183;
+    }
+
+    .social ul a:active {
+        color: #1E4548
+    }
+
+    .menu-link:hover, .post-link:hover, a:hover {
+        color: #C3E472;
+    }
+    
+    .menu-link:active, .post-link:active, a:active {
+        color: #6CA183;
+    }
+
+    code {
+        border: dashed 1px #C3E472;
+        background-color: #EBEDDF;
+    }
+
+    blockquote {
+        border: dashed 1px #C3E472;
+    }
+
+    .divider {
+        border-color: #EBEDDF;
+    }
+}
+
+.title {
+    font-family: "CentimaMonoBold", sans-serif;
+}
+
+.site-title {
+    text-align: center;
+    color: #6CA183;
 }
 
 .h3, .h4, .h5, .h6 {
@@ -57,23 +84,45 @@ html {
     font-size: 1rem;
 }
 
+hr {
+    opacity: .25;
+    margin: 1rem 0;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+a {
+    color: inherit;
+}
+
 .back-link {
-    color: #000000;
     font-size: .75rem;
 }
 
-.container {
+.container, .header {
     max-width: 900px;
+}
+
+.container {
     padding-right: .75rem;
     padding-left: .75rem;
     margin-right: auto;
     margin-left: auto;
 }
 
+.header-utils {
+    display: flex;
+    justify-content: end;
+    margin-bottom: 1rem;
+}
+
 code {
     display: block;
-    border: dashed 1px #000;
-    background-color: #f7f9fe ;
+    border: dashed 1px #6CA183;
+    background-color: #f7f9fe;
     padding: 1rem;
     text-wrap: none;
     overflow: auto;
@@ -83,9 +132,10 @@ code {
 
 blockquote {
     display: block;
-    border: dashed 1px #000;
+    border: dashed 1px #6CA183;
     padding: 1rem;
     font-style: italic;
+    font-weight: bold;
 }
 
 blockquote p {
@@ -94,7 +144,6 @@ blockquote p {
 
 figure img {
 	width: 100%;
-	border: dashed 1px #000;
 }
 
 figure figcaption {
@@ -109,15 +158,15 @@ figure figcaption h4 {
 	font-weight: normal;
 }
 
-.header, .footer {
+.header-container, .footer {
     width: 300px;
 }
 
-.header {
+.header-container {
     flex-flow: row wrap;
 }
 
-.header, .social {
+.header-container, .social {
     margin: auto;
 }
 
@@ -136,29 +185,32 @@ figure figcaption h4 {
 }
 
 .menu-link, .post-link, .article-body {
-    color: #000000;
+    color: inherit;
 }
 
-hr {
-    opacity: .25;
-    margin: 1rem 0;
+.social ul a {
+    color: #6CA183
 }
 
-p {
-    margin-top: 0;
-    margin-bottom: 1rem;
+.social ul a:hover {
+    color: #1E4548;
 }
 
-.title {
-    font-family: "CentimaMonoBold",sans-serif;
+.social ul a:active {
+    color: #C3E472;
 }
 
-.site-title {
-    text-align: center;
+.menu-link:hover, .post-link:hover, a:hover {
+    color: #6CA183;
+}
+
+.menu-link:active, .post-link:active, a:active {
+    color: #C3E472;
 }
 
 .divider {
-    border: 1px solid #000;
+    border: 1px solid;
+    border-color: #6CA183;
     margin-bottom: 0.5rem;
 }
 
@@ -176,10 +228,6 @@ p {
 
 .footer {
     margin: 3rem auto auto;
-}
-
-.social ul a {
-    color: inherit;
 }
 
 @media (max-width: 500px) {

@@ -43,7 +43,8 @@
 </span></span><span class=line><span class=cl>                <span class=n>sprite_id</span><span class=p>,</span> <span class=n>sprite_size</span> <span class=o>=</span> <span class=n>struct</span><span class=o>.</span><span class=n>unpack</span><span class=p>(</span><span class=s2>&#34;&lt;HH&#34;</span><span class=p>,</span> <span class=n>header</span><span class=p>)</span>  
 </span></span><span class=line><span class=cl>  
 </span></span><span class=line><span class=cl>                <span class=c1># The &#39;size&#39; field includes the 2 bytes of the size itself.  </span>
-</span></span><span class=line><span class=cl>                <span class=c1># So the actual pixel data payload is size - 2.                payload_size = sprite_size - 2  </span>
+</span></span><span class=line><span class=cl>                <span class=c1># So the actual pixel data payload is size - 2.</span>
+</span></span><span class=line><span class=cl>                <span class=n>payload_size</span> <span class=o>=</span> <span class=n>sprite_size</span> <span class=o>-</span> <span class=mi>2</span>  
 </span></span><span class=line><span class=cl>  
 </span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=n>payload_size</span> <span class=o>&lt;=</span> <span class=mi>0</span><span class=p>:</span>  
 </span></span><span class=line><span class=cl>                    <span class=c1># Empty or invalid sprite, skip logic  </span>
@@ -56,7 +57,8 @@
 </span></span><span class=line><span class=cl>                    <span class=k>break</span>  
 </span></span><span class=line><span class=cl>  
 </span></span><span class=line><span class=cl>                <span class=c1># 4. Decompress RLE Data  </span>
-</span></span><span class=line><span class=cl>                <span class=c1># Create a blank 32x32 transparent image                img = Image.new(&#34;RGBA&#34;, (32, 32), (0, 0, 0, 0))  </span>
+</span></span><span class=line><span class=cl>                <span class=c1># Create a blank 32x32 transparent image</span>
+</span></span><span class=line><span class=cl>                <span class=n>img</span> <span class=o>=</span> <span class=n>Image</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=s2>&#34;RGBA&#34;</span><span class=p>,</span> <span class=p>(</span><span class=mi>32</span><span class=p>,</span> <span class=mi>32</span><span class=p>),</span> <span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>0</span><span class=p>))</span>  
 </span></span><span class=line><span class=cl>                <span class=n>pixels</span> <span class=o>=</span> <span class=n>img</span><span class=o>.</span><span class=n>load</span><span class=p>()</span>  
 </span></span><span class=line><span class=cl>  
 </span></span><span class=line><span class=cl>                <span class=n>read_offset</span> <span class=o>=</span> <span class=mi>0</span>  
@@ -64,7 +66,8 @@
 </span></span><span class=line><span class=cl>  
 </span></span><span class=line><span class=cl>                <span class=k>while</span> <span class=n>read_offset</span> <span class=o>&lt;</span> <span class=n>payload_size</span> <span class=ow>and</span> <span class=n>current_pixel</span> <span class=o>&lt;</span> <span class=mi>1024</span><span class=p>:</span>  
 </span></span><span class=line><span class=cl>                    <span class=c1># A. Transparent Block  </span>
-</span></span><span class=line><span class=cl>                    <span class=c1># We need at least 2 bytes for the transparent count                    if read_offset + 2 &gt; payload_size:  </span>
+</span></span><span class=line><span class=cl>                    <span class=c1># We need at least 2 bytes for the transparent count</span>
+</span></span><span class=line><span class=cl>                    <span class=k>if</span> <span class=n>read_offset</span> <span class=o>+</span> <span class=mi>2</span> <span class=o>&gt;</span> <span class=n>payload_size</span><span class=p>:</span>  
 </span></span><span class=line><span class=cl>                        <span class=k>break</span>  
 </span></span><span class=line><span class=cl>  
 </span></span><span class=line><span class=cl>                    <span class=n>trans_raw</span> <span class=o>=</span> <span class=n>struct</span><span class=o>.</span><span class=n>unpack_from</span><span class=p>(</span><span class=s2>&#34;&lt;H&#34;</span><span class=p>,</span> <span class=n>sprite_data</span><span class=p>,</span> <span class=n>read_offset</span><span class=p>)[</span><span class=mi>0</span><span class=p>]</span>  
@@ -78,7 +81,8 @@
 </span></span><span class=line><span class=cl>                    <span class=n>current_pixel</span> <span class=o>+=</span> <span class=n>skip_pixels</span>  
 </span></span><span class=line><span class=cl>  
 </span></span><span class=line><span class=cl>                    <span class=c1># B. Colored Block  </span>
-</span></span><span class=line><span class=cl>                    <span class=c1># We need at least 2 bytes for the colored count                    if read_offset + 2 &gt; payload_size:  </span>
+</span></span><span class=line><span class=cl>                    <span class=c1># We need at least 2 bytes for the colored count</span>
+</span></span><span class=line><span class=cl>                    <span class=k>if</span> <span class=n>read_offset</span> <span class=o>+</span> <span class=mi>2</span> <span class=o>&gt;</span> <span class=n>payload_size</span><span class=p>:</span>  
 </span></span><span class=line><span class=cl>                        <span class=k>break</span>  
 </span></span><span class=line><span class=cl>  
 </span></span><span class=line><span class=cl>                    <span class=n>colored_bytes</span> <span class=o>=</span> <span class=n>struct</span><span class=o>.</span><span class=n>unpack_from</span><span class=p>(</span><span class=s2>&#34;&lt;H&#34;</span><span class=p>,</span> <span class=n>sprite_data</span><span class=p>,</span> <span class=n>read_offset</span><span class=p>)[</span><span class=mi>0</span><span class=p>]</span>  

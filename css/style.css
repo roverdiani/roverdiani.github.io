@@ -1,0 +1,520 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    display: block;
+}
+
+body {
+    display: block;
+    margin: 0;
+    line-height: 1.5;
+    background: #EBEDDF;
+    color: #072224
+}
+
+body.dark-mode {
+    background: #072224;
+    color: #EBEDDF;
+
+    .site-title {
+        color: #C3E472;
+        text-align: center;
+    }
+
+    .social ul a {
+        color: #C3E472;
+    }
+
+    .social ul a:hover {
+        color: #6CA183;
+    }
+
+    .social ul a:active {
+        color: #1E4548
+    }
+
+    .menu-link:hover, .post-link:hover, a:hover {
+        color: #C3E472;
+    }
+    
+    .menu-link:active, .post-link:active, a:active {
+        color: #6CA183;
+    }
+
+    blockquote {
+        border: dashed 1px #C3E472;
+    }
+
+    .divider {
+        border-color: #EBEDDF;
+    }
+}
+
+.title {
+    font-family: "CentimaMonoBold", sans-serif;
+}
+
+.site-title {
+    text-align: center;
+    color: #6CA183;
+}
+
+.h3, .h4, .h5, .h6 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.h3 {
+    font-size: 1.75rem;
+}
+
+.h5 {
+    font-size: 1.25rem;
+}
+
+.h6 {
+    font-size: 1rem;
+}
+
+hr {
+    opacity: .25;
+    margin: 1rem 0;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+a {
+    color: inherit;
+}
+
+.back-link {
+    font-size: .75rem;
+}
+
+.container, .header {
+    max-width: 900px;
+}
+
+.container {
+    padding-right: .75rem;
+    padding-left: .75rem;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.header-utils {
+    display: flex;
+    justify-content: end;
+    margin-bottom: 1rem;
+}
+
+:not(pre) > code {
+    display: inline;
+    border: dashed 1px #6CA183;
+    background-color: #f7f9fe;
+    padding: .1rem .3rem;
+    font-size: .80rem;
+}
+
+.highlight,
+pre.chroma,
+pre.mermaid {
+    border: dashed 1px #6CA183;
+    background-color: #f7f9fe;
+}
+
+.highlight pre {
+    margin: 0;
+    border: 0;
+    background-color: transparent;
+}
+
+.highlight,
+pre.mermaid {
+    margin: 1rem 0;
+}
+
+.highlight pre,
+pre.chroma,
+pre.mermaid {
+    padding: 1rem;
+    overflow: auto;
+    overflow-y: hidden;
+}
+
+pre code {
+    display: block;
+    border: 0;
+    padding: 0;
+    background-color: transparent;
+    color: inherit;
+    font-size: .80rem;
+    white-space: pre;
+}
+
+body.dark-mode :not(pre) > code {
+    border-color: #C3E472;
+    background-color: #123336;
+    color: #EBEDDF;
+}
+
+body.dark-mode .highlight,
+body.dark-mode pre.chroma,
+body.dark-mode pre.mermaid {
+    border-color: #C3E472;
+    background-color: #0D2A2D;
+    color: #EBEDDF;
+}
+
+body.dark-mode .highlight pre {
+    border: 0;
+    background-color: transparent;
+}
+
+body.dark-mode pre code {
+    color: inherit;
+    background-color: transparent;
+}
+
+body.dark-mode .chroma .c,
+body.dark-mode .chroma .c1,
+body.dark-mode .chroma .cm,
+body.dark-mode .chroma .cp,
+body.dark-mode .chroma .cs {
+    color: #6CA183;
+}
+
+body.dark-mode .chroma .k,
+body.dark-mode .chroma .kc,
+body.dark-mode .chroma .kd,
+body.dark-mode .chroma .kn,
+body.dark-mode .chroma .kp,
+body.dark-mode .chroma .kr,
+body.dark-mode .chroma .kt {
+    color: #C3E472;
+}
+
+body.dark-mode .chroma .s,
+body.dark-mode .chroma .s1,
+body.dark-mode .chroma .s2,
+body.dark-mode .chroma .sa,
+body.dark-mode .chroma .sb,
+body.dark-mode .chroma .sc,
+body.dark-mode .chroma .sd,
+body.dark-mode .chroma .se,
+body.dark-mode .chroma .sh,
+body.dark-mode .chroma .si,
+body.dark-mode .chroma .sr,
+body.dark-mode .chroma .ss,
+body.dark-mode .chroma .sx {
+    color: #E5BF78;
+}
+
+body.dark-mode .chroma .m,
+body.dark-mode .chroma .mb,
+body.dark-mode .chroma .mf,
+body.dark-mode .chroma .mh,
+body.dark-mode .chroma .mi,
+body.dark-mode .chroma .il,
+body.dark-mode .chroma .mo {
+    color: #8ED7D1;
+}
+
+body.dark-mode .chroma .na,
+body.dark-mode .chroma .nb,
+body.dark-mode .chroma .nc,
+body.dark-mode .chroma .nd,
+body.dark-mode .chroma .ne,
+body.dark-mode .chroma .nf,
+body.dark-mode .chroma .nl,
+body.dark-mode .chroma .nn,
+body.dark-mode .chroma .nt,
+body.dark-mode .chroma .nv,
+body.dark-mode .chroma .nx {
+    color: #9FD6FF;
+}
+
+body.dark-mode .chroma .o,
+body.dark-mode .chroma .ow,
+body.dark-mode .chroma .p {
+    color: #EBEDDF;
+}
+
+.admonition {
+    --admonition-color: #6CA183;
+    --admonition-background: rgba(108, 161, 131, 0.12);
+    --admonition-title-background: rgba(108, 161, 131, 0.18);
+    display: block;
+    margin: 1rem 0;
+    border-left: .25rem solid var(--admonition-color);
+    background-color: var(--admonition-background);
+}
+
+.admonition-title {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .35rem .75rem;
+    background-color: var(--admonition-title-background);
+    color: inherit;
+    cursor: pointer;
+    font-weight: bold;
+    list-style: none;
+}
+
+.admonition-title::-webkit-details-marker {
+    display: none;
+}
+
+.admonition-title::after {
+    content: "+";
+    margin-left: auto;
+    color: var(--admonition-color);
+}
+
+.admonition[open] > .admonition-title::after {
+    content: "-";
+}
+
+.admonition-marker {
+    width: .75rem;
+    height: .75rem;
+    border: 2px solid var(--admonition-color);
+    display: inline-block;
+    flex: 0 0 auto;
+}
+
+.admonition-content {
+    padding: .75rem;
+}
+
+.admonition-content > :last-child {
+    margin-bottom: 0;
+}
+
+.admonition-note {
+    --admonition-color: #448AFF;
+    --admonition-background: rgba(68, 138, 255, 0.10);
+    --admonition-title-background: rgba(68, 138, 255, 0.16);
+}
+
+.admonition-abstract,
+.admonition-info {
+    --admonition-color: #00B8D4;
+    --admonition-background: rgba(0, 184, 212, 0.10);
+    --admonition-title-background: rgba(0, 184, 212, 0.16);
+}
+
+.admonition-tip {
+    --admonition-color: #00BFA5;
+    --admonition-background: rgba(0, 191, 165, 0.10);
+    --admonition-title-background: rgba(0, 191, 165, 0.16);
+}
+
+.admonition-success,
+.admonition-question {
+    --admonition-color: #64A83C;
+    --admonition-background: rgba(100, 168, 60, 0.12);
+    --admonition-title-background: rgba(100, 168, 60, 0.18);
+}
+
+.admonition-warning {
+    --admonition-color: #C7832E;
+    --admonition-background: rgba(199, 131, 46, 0.12);
+    --admonition-title-background: rgba(199, 131, 46, 0.18);
+}
+
+.admonition-failure,
+.admonition-danger,
+.admonition-bug {
+    --admonition-color: #D45C5C;
+    --admonition-background: rgba(212, 92, 92, 0.12);
+    --admonition-title-background: rgba(212, 92, 92, 0.18);
+}
+
+.admonition-example {
+    --admonition-color: #8B6FC9;
+    --admonition-background: rgba(139, 111, 201, 0.12);
+    --admonition-title-background: rgba(139, 111, 201, 0.18);
+}
+
+.admonition-quote {
+    --admonition-color: #7B8583;
+    --admonition-background: rgba(123, 133, 131, 0.12);
+    --admonition-title-background: rgba(123, 133, 131, 0.18);
+}
+
+body.dark-mode .admonition {
+    --admonition-background: rgba(195, 228, 114, 0.08);
+    --admonition-title-background: rgba(195, 228, 114, 0.12);
+}
+
+body.dark-mode .admonition-note {
+    --admonition-color: #8CB6FF;
+    --admonition-background: rgba(140, 182, 255, 0.10);
+    --admonition-title-background: rgba(140, 182, 255, 0.15);
+}
+
+body.dark-mode .admonition-abstract,
+body.dark-mode .admonition-info {
+    --admonition-color: #7CDDEB;
+    --admonition-background: rgba(124, 221, 235, 0.10);
+    --admonition-title-background: rgba(124, 221, 235, 0.15);
+}
+
+body.dark-mode .admonition-tip {
+    --admonition-color: #6EDBCB;
+    --admonition-background: rgba(110, 219, 203, 0.10);
+    --admonition-title-background: rgba(110, 219, 203, 0.15);
+}
+
+body.dark-mode .admonition-success,
+body.dark-mode .admonition-question {
+    --admonition-color: #C3E472;
+    --admonition-background: rgba(195, 228, 114, 0.10);
+    --admonition-title-background: rgba(195, 228, 114, 0.15);
+}
+
+body.dark-mode .admonition-warning {
+    --admonition-color: #E5BF78;
+    --admonition-background: rgba(229, 191, 120, 0.10);
+    --admonition-title-background: rgba(229, 191, 120, 0.15);
+}
+
+body.dark-mode .admonition-failure,
+body.dark-mode .admonition-danger,
+body.dark-mode .admonition-bug {
+    --admonition-color: #F08A8A;
+    --admonition-background: rgba(240, 138, 138, 0.10);
+    --admonition-title-background: rgba(240, 138, 138, 0.15);
+}
+
+body.dark-mode .admonition-example {
+    --admonition-color: #B9A4F0;
+    --admonition-background: rgba(185, 164, 240, 0.10);
+    --admonition-title-background: rgba(185, 164, 240, 0.15);
+}
+
+body.dark-mode .admonition-quote {
+    --admonition-color: #A9B5B1;
+    --admonition-background: rgba(169, 181, 177, 0.10);
+    --admonition-title-background: rgba(169, 181, 177, 0.15);
+}
+
+blockquote {
+    display: block;
+    border: dashed 1px #6CA183;
+    padding: 1rem;
+    font-style: italic;
+    font-weight: bold;
+}
+
+blockquote p {
+    margin: 0;
+}
+
+figure img {
+	width: 100%;
+}
+
+figure figcaption {
+	padding: none;
+	margin: none;
+	text-align: center;
+}
+
+figure figcaption h4 {
+	margin-top: 2px;
+	font-style: italic;
+	font-weight: normal;
+}
+
+.header-container, .footer {
+    width: 300px;
+}
+
+.header-container {
+    flex-flow: row wrap;
+}
+
+.header-container, .social {
+    margin: auto;
+}
+
+.menu ul, .social ul {
+    display: flex;
+    justify-content: space-around;
+}
+
+.menu ul, .social ul, .article-list {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-link {
+    text-decoration: none;
+}
+
+.menu-link, .post-link, .article-body {
+    color: inherit;
+}
+
+.social ul a {
+    color: #6CA183
+}
+
+.social ul a:hover {
+    color: #1E4548;
+}
+
+.social ul a:active {
+    color: #C3E472;
+}
+
+.menu-link:hover, .post-link:hover, a:hover {
+    color: #6CA183;
+}
+
+.menu-link:active, .post-link:active, a:active {
+    color: #C3E472;
+}
+
+.divider {
+    border: 1px solid;
+    border-color: #6CA183;
+    margin-bottom: 0.5rem;
+}
+
+.line-break {
+    width: 100%;
+}
+
+.container, .about-section, .article-list-body, .article-body {
+    margin-top: 2rem;
+}
+
+.about-text, .article-list-body, .article-body, .article-title {
+    text-align: justify;
+}
+
+.footer {
+    margin: 3rem auto auto;
+}
+
+@media (max-width: 500px) {
+    * {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 650px) {
+    .back-link-div {
+        display: none;
+    }
+}

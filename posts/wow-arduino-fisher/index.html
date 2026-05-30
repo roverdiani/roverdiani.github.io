@@ -5,18 +5,18 @@
 . Mas o que o torna particularmente útil para este projeto? Ele pode aparecer para um computador conectado como um mouse e teclado, então ele pode enviar apertos de tecla para o computador dizendo ao jogo o que fazer.</p><p>Isso nos deixa com um pequeno detalhe: <em>como sabemos se o peixe foi fisgado para que o comando de captura possa ser enviado?</em> Eu não queria usar software para ler a tela ou a memória, pois isso poderia ser facilmente detectado pelo sistema anti-cheat do jogo. Então, sem olhar para a tela, de quais outras formas o jogo pode nos dizer que devemos fisgar o peixe? Pelo som que o jogo faz quando o peixe morde a isca.</p><p>Para este projeto, não me preocupei muito com robustez, então há espaço para melhorias. Se eu fosse fazer uma versão melhor disso, <strong>eu usaria um módulo amplificador</strong> (um amplificador de áudio LM386 ou <a href=https://www.adafruit.com/product/1552 target=_blank rel="noopener noreferrer">algo como isto</a>
 ), para amplificar o sinal que vem da placa de som antes de entrar no Arduino.</p><p>Como não usei um amplificador, o circuito é extremamente simples. <strong>Basta conectar a saída da placa de som no Arduino</strong>. Ligue o terra da placa de som e o terra do Arduino juntos, e envie o sinal para uma das entradas analógicas (escolhi a A1). O circuito é o seguinte:</p><figure><img src=/img/arduinofisher.png><figcaption><h4>A saída da placa de som é representada como a caixa de som.</h4></figcaption></figure><p>Aqui está o código-fonte para a versão básica do software. Deixarei o <a href=https://github.com/roverdiani/wowfisher target=_blank rel="noopener noreferrer">código-fonte completo no meu GitHub</a>
 , junto com alguns truques que implementei para tornar o comportamento do programa um pouco mais aleatório.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;Keyboard.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=cp>#define FISHING_TIMEOUT 25000
 </span></span></span><span class=line><span class=cl><span class=cp>#define SOUND_DETECT_THRESHOLD 50
-</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=k>const</span> <span class=kt>char</span> <span class=n>FISHING_KEY</span> <span class=o>=</span> <span class=sc>&#39;1&#39;</span><span class=p>;</span>
 </span></span><span class=line><span class=cl><span class=k>const</span> <span class=kt>char</span> <span class=n>CATCH_KEY</span> <span class=o>=</span> <span class=sc>&#39;f&#39;</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=c1>// Variável para rastrear se estamos pescando ou não
-</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>bool</span> <span class=n>isFishing</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
+</span></span></span><span class=line><span class=cl><span class=kt>bool</span> <span class=n>isFishing</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=c1>// Lança a linha de pesca enviando o pressionamento da tecla de pesca
-</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>void</span> <span class=nf>fish</span><span class=p>()</span>
+</span></span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>fish</span><span class=p>()</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=n>Serial</span><span class=p>.</span><span class=n>println</span><span class=p>(</span><span class=s>&#34;Pescando.&#34;</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=n>Keyboard</span><span class=p>.</span><span class=n>write</span><span class=p>(</span><span class=n>FISHING_KEY</span><span class=p>);</span>
@@ -24,19 +24,19 @@
 </span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=c1>// Fisga o peixe enviando o pressionamento da tecla de captura
-</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>void</span> <span class=nf>catch_fish</span><span class=p>()</span>
+</span></span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>catch_fish</span><span class=p>()</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=c1>// Ignora isso se não estivermos pescando no momento.
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// Isso existe para não enviar múltiplos comandos
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// quando já estiver capturando um peixe.
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>isFishing</span><span class=p>)</span>
+</span></span></span><span class=line><span class=cl>    <span class=c1>// Isso existe para não enviar múltiplos comandos
+</span></span></span><span class=line><span class=cl>    <span class=c1>// quando já estiver capturando um peixe.
+</span></span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>isFishing</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>    <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=n>Serial</span><span class=p>.</span><span class=n>println</span><span class=p>(</span><span class=s>&#34;CATCH: chamado quando não está pescando. Ignorando.&#34;</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>        <span class=k>return</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>    <span class=p>}</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    <span class=c1>// Espera um pouco antes de fisgar o peixe.
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>Serial</span><span class=p>.</span><span class=n>print</span><span class=p>(</span><span class=s>&#34;CATCH: atraso de 1500ms antes de fisgar.&#34;</span><span class=p>);</span>
+</span></span></span><span class=line><span class=cl>    <span class=n>Serial</span><span class=p>.</span><span class=n>print</span><span class=p>(</span><span class=s>&#34;CATCH: atraso de 1500ms antes de fisgar.&#34;</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=n>delay</span><span class=p>(</span><span class=mi>1500</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=n>Keyboard</span><span class=p>.</span><span class=n>write</span><span class=p>(</span><span class=n>CATCH_KEY</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=n>isFishing</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
@@ -47,7 +47,7 @@
 </span></span><span class=line><span class=cl>    <span class=n>delay</span><span class=p>(</span><span class=mi>1000</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    
 </span></span><span class=line><span class=cl>    <span class=c1>// Inicializa as bibliotecas de teclado e serial.
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>Keyboard</span><span class=p>.</span><span class=n>begin</span><span class=p>();</span>
+</span></span></span><span class=line><span class=cl>    <span class=n>Keyboard</span><span class=p>.</span><span class=n>begin</span><span class=p>();</span>
 </span></span><span class=line><span class=cl>    <span class=n>Serial</span><span class=p>.</span><span class=n>begin</span><span class=p>(</span><span class=mi>9600</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=n>Serial</span><span class=p>.</span><span class=n>println</span><span class=p>(</span><span class=s>&#34;Fisher v0.1&#34;</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    
@@ -62,10 +62,10 @@
 </span></span><span class=line><span class=cl>    <span class=kt>unsigned</span> <span class=kt>long</span> <span class=n>fishing_start_time</span> <span class=o>=</span> <span class=n>millis</span><span class=p>();</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    <span class=c1>// Fica ouvindo o som que o jogo faz quando um peixe é fisgado.
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>do</span>
+</span></span></span><span class=line><span class=cl>    <span class=k>do</span>
 </span></span><span class=line><span class=cl>    <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=c1>// Se tempo suficiente passou, talvez tenhamos perdido algum peixe, então começa de novo.
-</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=k>if</span> <span class=p>(</span><span class=n>millis</span><span class=p>()</span> <span class=o>&gt;</span> <span class=p>(</span><span class=n>fishing_start_time</span> <span class=o>+</span> <span class=n>FISHING_TIMEOUT</span><span class=p>))</span>
+</span></span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>millis</span><span class=p>()</span> <span class=o>&gt;</span> <span class=p>(</span><span class=n>fishing_start_time</span> <span class=o>+</span> <span class=n>FISHING_TIMEOUT</span><span class=p>))</span>
 </span></span><span class=line><span class=cl>        <span class=p>{</span>
 </span></span><span class=line><span class=cl>            <span class=n>Serial</span><span class=p>.</span><span class=n>println</span><span class=p>(</span><span class=s>&#34;LOOP: falha ao detectar som de fisgada. Recomeçando.&#34;</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>            <span class=n>fish</span><span class=p>();</span>
@@ -77,11 +77,11 @@
 </span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>while</span> <span class=p>(</span><span class=n>soundDetect</span> <span class=o>&lt;</span> <span class=n>SOUND_DETECT_THRESHOLD</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    <span class=c1>// Pegamos um peixe! Eba!
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>Serial</span><span class=p>.</span><span class=n>println</span><span class=p>(</span><span class=s>&#34;Peixe detectado.&#34;</span><span class=p>);</span>
+</span></span></span><span class=line><span class=cl>    <span class=n>Serial</span><span class=p>.</span><span class=n>println</span><span class=p>(</span><span class=s>&#34;Peixe detectado.&#34;</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=n>catch_fish</span><span class=p>();</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    <span class=c1>// Espera um pouco antes de lançar a linha novamente.
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>Serial</span><span class=p>.</span><span class=n>print</span><span class=p>(</span><span class=s>&#34;LOOP: aguarda 2000ms antes de pescar novamente.&#34;</span><span class=p>);</span>
+</span></span></span><span class=line><span class=cl>    <span class=n>Serial</span><span class=p>.</span><span class=n>print</span><span class=p>(</span><span class=s>&#34;LOOP: aguarda 2000ms antes de pescar novamente.&#34;</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=n>delay</span><span class=p>(</span><span class=mi>2000</span><span class=p>);</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span></code></pre></div><p>Tenha em mente que <strong>esta não é uma solução perfeita</strong>. Como ela depende do som para tomar ações, você precisa <strong>pescar em lugares silenciosos</strong>, pois ruídos próximos podem ser interpretados como se um peixe tivesse sido fisgado.</p><p>Você também precisa <em>manter a janela do WoW em foco</em> para que os comandos de teclado funcionem. Talvez você precise testar diferentes níveis de som e ajustar o código para compensar variações das placas de som.</p><p>E lembre-se: <strong>eu não me responsabilizo pelo uso deste projeto.</strong></p><p>Agora, vamos tentar pegar o <a href="https://www.wowhead.com/achievement=1837/old-ironjaw" target=_blank rel="noopener noreferrer">Old Ironjaw</a>

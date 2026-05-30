@@ -5,18 +5,18 @@
 . But what makes it useful for this project? Well, it can appear to a connected computer as a mouse and keyboard, so it can send keystrokes to the computer telling the game what to do.</p><p>That leaves us with one little detail: <em>how do we know if the fish is hooked so the catch keystroke can be sent?</em> I didn&rsquo;t want to use software for reading the screen or memory, as this could easily be caught by the anti-cheat system in the game. So, without looking at the screen, which other ways can the game tell us that we should catch the fish? By the sound the game makes when fish bite the bait.</p><p>For this project, I didn&rsquo;t put a lot of effort on make it rock solid, so there is some room for improvement. If I would make a better version of this, <strong>I would use an amplifier module</strong> (an LM386 audio amplifier or <a href=https://www.adafruit.com/product/1552 target=_blank rel="noopener noreferrer">something like this</a>
 ), to amplify the signal that comes from the sound card before it enters the Arduino.</p><p>As I didn&rsquo;t use an amplifier, the circuit is extremely simple. <strong>Just plug the output of the sound card on the Arduino</strong>. Tie the ground signal of the sound card and the ground signal of the Arduino together, and feed the signal to one of the analog inputs (I chose A1). The circuit is as follow:</p><figure><img src=/img/arduinofisher.png><figcaption><h4>The sound card output is represented as the speakerbox.</h4></figcaption></figure><p>Here is the source code for the basic version of the software. I will leave the <a href=https://github.com/roverdiani/wowfisher target=_blank rel="noopener noreferrer">full source code on my GitHub</a>
 , along some tricks that I implemented to make the program behavior a little more random.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;Keyboard.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=cp>#define FISHING_TIMEOUT 25000
 </span></span></span><span class=line><span class=cl><span class=cp>#define SOUND_DETECT_THRESHOLD 50
-</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=k>const</span> <span class=kt>char</span> <span class=n>FISHING_KEY</span> <span class=o>=</span> <span class=sc>&#39;1&#39;</span><span class=p>;</span>
 </span></span><span class=line><span class=cl><span class=k>const</span> <span class=kt>char</span> <span class=n>CATCH_KEY</span> <span class=o>=</span> <span class=sc>&#39;f&#39;</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=c1>// Variable to keep track if we are fishing or not
-</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>bool</span> <span class=n>isFishing</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
+</span></span></span><span class=line><span class=cl><span class=kt>bool</span> <span class=n>isFishing</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=c1>// Throw the fishing line by issuing the fishing key keystroke
-</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>void</span> <span class=nf>fish</span><span class=p>()</span>
+</span></span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>fish</span><span class=p>()</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=n>Serial</span><span class=p>.</span><span class=n>println</span><span class=p>(</span><span class=s>&#34;Fishing.&#34;</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=n>Keyboard</span><span class=p>.</span><span class=n>write</span><span class=p>(</span><span class=n>FISHING_KEY</span><span class=p>);</span>
@@ -24,19 +24,19 @@
 </span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=c1>// Catch the fish by issuing the catch key keystroke
-</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>void</span> <span class=nf>catch_fish</span><span class=p>()</span>
+</span></span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>catch_fish</span><span class=p>()</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=c1>// Ignore this if we are not currently fishing.
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// This exists so that it doesnt issue multiple keystrokes
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// when already catching a fish.
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>isFishing</span><span class=p>)</span>
+</span></span></span><span class=line><span class=cl>    <span class=c1>// This exists so that it doesnt issue multiple keystrokes
+</span></span></span><span class=line><span class=cl>    <span class=c1>// when already catching a fish.
+</span></span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>isFishing</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>    <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=n>Serial</span><span class=p>.</span><span class=n>println</span><span class=p>(</span><span class=s>&#34;CATCH: called when not fishing. Ignoring.&#34;</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>        <span class=k>return</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>    <span class=p>}</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    <span class=c1>// Wait sometime before catching the fish.
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>Serial</span><span class=p>.</span><span class=n>print</span><span class=p>(</span><span class=s>&#34;CATCH: delay 1500ms before catching.&#34;</span><span class=p>);</span>
+</span></span></span><span class=line><span class=cl>    <span class=n>Serial</span><span class=p>.</span><span class=n>print</span><span class=p>(</span><span class=s>&#34;CATCH: delay 1500ms before catching.&#34;</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=n>delay</span><span class=p>(</span><span class=mi>1500</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=n>Keyboard</span><span class=p>.</span><span class=n>write</span><span class=p>(</span><span class=n>CATCH_KEY</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=n>isFishing</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
@@ -47,7 +47,7 @@
 </span></span><span class=line><span class=cl>    <span class=n>delay</span><span class=p>(</span><span class=mi>1000</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    
 </span></span><span class=line><span class=cl>    <span class=c1>// Init the keyboard and serial libraries.
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>Keyboard</span><span class=p>.</span><span class=n>begin</span><span class=p>();</span>
+</span></span></span><span class=line><span class=cl>    <span class=n>Keyboard</span><span class=p>.</span><span class=n>begin</span><span class=p>();</span>
 </span></span><span class=line><span class=cl>    <span class=n>Serial</span><span class=p>.</span><span class=n>begin</span><span class=p>(</span><span class=mi>9600</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=n>Serial</span><span class=p>.</span><span class=n>println</span><span class=p>(</span><span class=s>&#34;Fisher v0.1&#34;</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    
@@ -62,10 +62,10 @@
 </span></span><span class=line><span class=cl>    <span class=kt>unsigned</span> <span class=kt>long</span> <span class=n>fishing_start_time</span> <span class=o>=</span> <span class=n>millis</span><span class=p>();</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    <span class=c1>// Keep listening for the sound the game makes when a fish is hooked.
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>do</span>
+</span></span></span><span class=line><span class=cl>    <span class=k>do</span>
 </span></span><span class=line><span class=cl>    <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=c1>// If enough time has elapsed, maybe we missed some fish, so it starts again.
-</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=k>if</span> <span class=p>(</span><span class=n>millis</span><span class=p>()</span> <span class=o>&gt;</span> <span class=p>(</span><span class=n>fishing_start_time</span> <span class=o>+</span> <span class=n>FISHING_TIMEOUT</span><span class=p>))</span>
+</span></span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>millis</span><span class=p>()</span> <span class=o>&gt;</span> <span class=p>(</span><span class=n>fishing_start_time</span> <span class=o>+</span> <span class=n>FISHING_TIMEOUT</span><span class=p>))</span>
 </span></span><span class=line><span class=cl>        <span class=p>{</span>
 </span></span><span class=line><span class=cl>            <span class=n>Serial</span><span class=p>.</span><span class=n>println</span><span class=p>(</span><span class=s>&#34;LOOP: failed to detect catch sound. Starting again.&#34;</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>            <span class=n>fish</span><span class=p>();</span>
@@ -77,11 +77,11 @@
 </span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>while</span> <span class=p>(</span><span class=n>soundDetect</span> <span class=o>&lt;</span> <span class=n>SOUND_DETECT_THRESHOLD</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    <span class=c1>// We caught some fish! Yay!
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>Serial</span><span class=p>.</span><span class=n>println</span><span class=p>(</span><span class=s>&#34;Fish detected.&#34;</span><span class=p>);</span>
+</span></span></span><span class=line><span class=cl>    <span class=n>Serial</span><span class=p>.</span><span class=n>println</span><span class=p>(</span><span class=s>&#34;Fish detected.&#34;</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=n>catch_fish</span><span class=p>();</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    <span class=c1>// Wait a little before throwing the line again.
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>Serial</span><span class=p>.</span><span class=n>print</span><span class=p>(</span><span class=s>&#34;LOOP: wait 2000ms before fishing again.&#34;</span><span class=p>);</span>
+</span></span></span><span class=line><span class=cl>    <span class=n>Serial</span><span class=p>.</span><span class=n>print</span><span class=p>(</span><span class=s>&#34;LOOP: wait 2000ms before fishing again.&#34;</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=n>delay</span><span class=p>(</span><span class=mi>2000</span><span class=p>);</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span></code></pre></div><p>Keep in mind that <strong>this is not a perfect solution</strong>. As it relies on sound for taking actions, you have to <strong>fish in places that are quiet</strong>, as nearby noises can make it interpret as if a fish was caught.</p><p>You also need to <em>keep the WoW window focused</em> for the keystrokes to work. You may need to try different sound levels and adjust the code to compensate for variations of sound cards.</p><p>And remember: <strong>I do not take responsibility for the usage of this project.</strong></p><p>Now, let&rsquo;s try to get the <a href="https://www.wowhead.com/achievement=1837/old-ironjaw" target=_blank rel="noopener noreferrer">Old Ironjaw</a>

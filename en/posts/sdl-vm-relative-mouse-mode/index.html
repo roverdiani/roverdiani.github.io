@@ -3,39 +3,39 @@
 , it works like this:</p><blockquote><p>While the mouse is in relative mode, the cursor is hidden, the mouse position is constrained to the window, and <strong>SDL will report continuous relative mouse motion even if the mouse is at the edge of the window</strong>.</p></blockquote><p>When used together with the SDL_GetRelativeMouseState() function, I should have the mouse deltas since the last time the input was read (once per frame). With those values, I could rotate my camera accordingly.</p><p>Ok, so it seems that this is exactly what I needed: the mouse should not exit the window and it will continue to report motion even when at the edge of it. Let&rsquo;s see how I implemented that on the code.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=kt>void</span> <span class=nf>init_display</span><span class=p>()</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=c1>// Window creation code
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// ...
-</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span></span><span class=line><span class=cl>    <span class=c1>// ...
+</span></span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>SDL_SetRelativeMouseMode</span><span class=p>(</span><span class=n>SDL_TRUE</span><span class=p>)</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>    <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=c1>// Log the error and exit the program
-</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=k>return</span><span class=p>;</span>
+</span></span></span><span class=line><span class=cl>        <span class=k>return</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>    <span class=p>}</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    <span class=c1>// ...
-</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>process_input</span><span class=p>()</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=n>SDL_PumpEvents</span><span class=p>();</span>
 </span></span><span class=line><span class=cl>    
 </span></span><span class=line><span class=cl>    <span class=c1>// Keyboard state reading code
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// ...
-</span></span></span><span class=line><span class=cl><span class=c1></span>    
+</span></span></span><span class=line><span class=cl>    <span class=c1>// ...
+</span></span></span><span class=line><span class=cl>    
 </span></span><span class=line><span class=cl>    <span class=kt>int32_t</span> <span class=n>x_offset</span><span class=p>,</span> <span class=n>y_offset</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>    <span class=n>SDL_GetRelativeMouseState</span><span class=p>(</span><span class=o>&amp;</span><span class=n>x_offset</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>y_offset</span><span class=p>);</span> <span class=c1>// Ignoring the button state for now
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// Do stuff with the relative mouse motion values set by the function
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// ...
-</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></span><span class=line><span class=cl>    <span class=c1>// Do stuff with the relative mouse motion values set by the function
+</span></span></span><span class=line><span class=cl>    <span class=c1>// ...
+</span></span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span></code></pre></div><p>But then I got into troubles. When running this code for the first time, with a little touch on the mouse, the camera went crazy. It seemed to me that the sensitivity of the mouse motion was too high; I then proceeded to multiply those two variables by a scaling factor in an attempt to correct that - it didn&rsquo;t solve the issue, but made the movement slower, which allowed me to discover another problem: when the mouse cursor seemed to reach the border of the window, the movement stopped completely. Well, there was something clearly wrong.</p><p>I was not sure if the camera rotation code was correct, so I hacked a simple test using keyboard input and it worked flawlessly. Ok, then I was sure that the values I was getting from the mouse state were wrong somehow. To verify that, I put a simple debug printf on the process_input() function:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=kt>void</span> <span class=nf>process_input</span><span class=p>()</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=c1>// ...
-</span></span></span><span class=line><span class=cl><span class=c1></span>    
+</span></span></span><span class=line><span class=cl>    
 </span></span><span class=line><span class=cl>    <span class=kt>int32_t</span> <span class=n>x_offset</span><span class=p>,</span> <span class=n>y_offset</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>    <span class=n>SDL_GetRelativeMouseState</span><span class=p>(</span><span class=o>&amp;</span><span class=n>x_offset</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>y_offset</span><span class=p>);</span> <span class=c1>// Ignoring the button state for now
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;Mouse motion: X: %d Y: %d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>x_offset</span><span class=p>,</span> <span class=n>y_offset</span><span class=p>);</span>
+</span></span></span><span class=line><span class=cl>    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;Mouse motion: X: %d Y: %d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>x_offset</span><span class=p>,</span> <span class=n>y_offset</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    
 </span></span><span class=line><span class=cl>    <span class=c1>// ...
-</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span></code></pre></div><p>Which returned me values such as:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=n>Mouse</span> <span class=nl>motion</span><span class=p>:</span> <span class=nl>X</span><span class=p>:</span> <span class=o>-</span><span class=mi>34</span> <span class=nl>Y</span><span class=p>:</span> <span class=mi>142</span>
 </span></span><span class=line><span class=cl><span class=n>Mouse</span> <span class=nl>motion</span><span class=p>:</span> <span class=nl>X</span><span class=p>:</span> <span class=o>-</span><span class=mi>34</span> <span class=nl>Y</span><span class=p>:</span> <span class=mi>214</span>
 </span></span><span class=line><span class=cl><span class=n>Mouse</span> <span class=nl>motion</span><span class=p>:</span> <span class=nl>X</span><span class=p>:</span> <span class=mi>0</span> <span class=nl>Y</span><span class=p>:</span> <span class=mi>0</span>
@@ -67,15 +67,15 @@ that seemed related to the problems I was having. There was an statement from Sa
 , like this:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=kt>void</span> <span class=nf>init_display</span><span class=p>()</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=c1>// Window creation code
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// ...
-</span></span></span><span class=line><span class=cl><span class=c1></span>    
+</span></span></span><span class=line><span class=cl>    <span class=c1>// ...
+</span></span></span><span class=line><span class=cl>    
 </span></span><span class=line><span class=cl>    <span class=n>SDL_SetHintWithPriority</span><span class=p>(</span><span class=n>SDL_HINT_MOUSE_RELATIVE_MODE_WARP</span><span class=p>,</span> <span class=s>&#34;1&#34;</span><span class=p>,</span> <span class=n>SDL_HINT_OVERRIDE</span><span class=p>);</span> <span class=c1>// the workaround
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>if</span> <span class=p>(</span><span class=n>SDL_SetRelativeMouseMode</span><span class=p>(</span><span class=n>SDL_TRUE</span><span class=p>)</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span>
+</span></span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>SDL_SetRelativeMouseMode</span><span class=p>(</span><span class=n>SDL_TRUE</span><span class=p>)</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>    <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=c1>// Log the error and exit the program
-</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=k>return</span><span class=p>;</span>
+</span></span></span><span class=line><span class=cl>        <span class=k>return</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>    <span class=p>}</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    <span class=c1>// ...
-</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span></code></pre></div><p>When I tried it, it didn&rsquo;t change the behavior of the program at all. For the time, I just gave up on getting this to work on the VM, and moved the development to the Windows host. Maybe someday I will try to fix this again, but, given that it works on real hardware running Linux, I&rsquo;m not that concerned.</p><p>If anyone has any suggestions to this problem, I would love to know.</p></div></article></div><div class=line-break></div><div class=footer><hr class=divider><div class=social><ul><li class=flex-item><a href=https://linkedin.com/in/rodrigo-verdiani/ target=_blank rel=noopener title=Linkedin><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a></li><li class=flex-item><a href=https://github.com/roverdiani target=_blank rel=noopener title=Github><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg></a></li></ul></div></div></div></body></html>

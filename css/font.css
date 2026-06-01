@@ -19,5 +19,8 @@
 
 * {
     font-family: DejaVuSansMono, monospace;
+}
+
+body {
     font-size: 15px;
 }

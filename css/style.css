@@ -79,7 +79,7 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
 }
 
 h1 { font-size: 1.75rem; }
-h2 { font-size: 1.5rem; }
+h2 { font-size: 1.5rem; text-transform: uppercase; }
 h3 { font-size: 1.25rem; }
 h4 { font-size: 1.1rem; }
 h5 { font-size: 1rem; }
@@ -542,8 +542,50 @@ figure figcaption h4 {
     margin: 3rem auto auto;
 }
 
+.toc {
+    margin: 1rem 0;
+}
+
+.toc ul {
+    margin: 0.5rem 0 0 0;
+    padding-left: 1.25rem;
+}
+
+.toc li {
+    margin: 0.2rem 0;
+}
+
+table {
+    border-collapse: collapse;
+    width: auto;
+    margin: 1rem auto;
+}
+
+th, td {
+    border: 1px solid #6CA183;
+    padding: 0.4rem 0.75rem;
+    text-align: center;
+}
+
+th {
+    background-color: rgba(108, 161, 131, 0.18);
+}
+
+body.dark-mode th {
+    background-color: rgba(195, 228, 114, 0.12);
+}
+
+body.dark-mode th,
+body.dark-mode td {
+    border-color: #C3E472;
+}
+
+mjx-container {
+    font-size: 1.2rem !important;
+}
+
 @media (max-width: 500px) {
-    * {
+    *:not(mjx-container):not(mjx-container *) {
         font-size: 12px;
     }
 }

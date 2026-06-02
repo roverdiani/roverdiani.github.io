@@ -595,3 +595,14 @@ mjx-container {
         display: none;
     }
 }
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+    th, td {
+        border-width: 2px;
+    }
+    .highlight,
+    pre.chroma,
+    :not(pre) > code {
+        border-width: 2px;
+    }
+}

@@ -496,6 +496,10 @@ figure figcaption h4 {
     text-decoration: none;
 }
 
+.post-link {
+    text-decoration: none;
+}
+
 .menu-link, .post-link, .article-body {
     color: inherit;
 }
@@ -514,6 +518,10 @@ figure figcaption h4 {
 
 .menu-link:hover, .post-link:hover, a:hover {
     color: #6CA183;
+}
+
+.post-link:hover {
+    text-decoration: underline;
 }
 
 .menu-link:active, .post-link:active, a:active {
@@ -553,6 +561,14 @@ figure figcaption h4 {
 
 .toc li {
     margin: 0.2rem 0;
+}
+
+.toc a {
+    text-decoration: none;
+}
+
+.toc a:hover {
+    text-decoration: underline;
 }
 
 table {

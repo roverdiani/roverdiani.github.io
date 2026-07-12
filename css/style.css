@@ -454,6 +454,35 @@ blockquote p {
     margin: 0;
 }
 
+.post-quote {
+    margin: 1.25rem 0;
+}
+
+.post-quote blockquote {
+    border: none;
+    padding: 0;
+    font-size: 0.9rem;
+    text-align: justify;
+}
+
+.post-quote-text {
+    margin: 0;
+}
+
+.post-quote-source {
+    display: block;
+    margin-top: 0.1rem;
+    text-align: right;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 0.8rem;
+    opacity: 0.75;
+}
+
+.post-quote-source::before {
+    content: "— ";
+}
+
 figure img {
 	width: 100%;
 }

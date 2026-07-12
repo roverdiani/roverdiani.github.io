@@ -47,6 +47,10 @@ body.dark-mode {
         border: dashed 1px #C3E472;
     }
 
+    .post-quote blockquote {
+        border: none;
+    }
+
     .divider {
         border-color: #EBEDDF;
     }
